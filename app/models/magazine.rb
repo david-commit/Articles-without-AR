@@ -10,8 +10,8 @@ class Magazine
     ArticleMod.all.filter{ |mag| mag.magazine.name == @name}
   end
   
-  def find_by_name(name)
-    @@all_magazines.find{|find| find.name == self.name}
+  def self.find_by_name(name)
+    @@all_magazines.find{|find| find.name == name}
   end
 
   def article_titles
