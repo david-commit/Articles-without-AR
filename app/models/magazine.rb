@@ -1,29 +1,46 @@
 class Magazine
+  attr_accessor :name, :category
+  include ArticleMod
+  @@all_magazines = []
 
-  include MagazinesMod
+  def initialize(name, category)
+    @name = name
+    @category = category
+    @@all_magazines << self
+  end
 
   def self.all
     @@all_magazines
   end
 
-  def contributors
-    ArticleMod.all.filter{ |mag| mag.magazine.name == @name}
+  def mag_contributors
+    ArticleMod.all.select{ |mag| mag.magazine.name == @name}
   end
-  
+
+  def contributors
+    mag_contributors.map{ |cont| cont.author }.uniq
+  end
+
   def self.find_by_name(name)
-    @@all_magazines.find{|find| find.name == name}
+    @@all_magazines.find{ |mag| mag.name ==  name}
+  end
+
+  def mapped_articles
+    @@all_articles.filter{|article| article.magazine.name == self.name}
   end
 
   def article_titles
-    ArticleMod.all.filter{|article| article.magazine.name == @name}
+    mapped_articles.map{|article| article.title}
   end
-  
+
+  def articles_in_magazine
+    @@all_articles.filter{|article| article.magazine == self}
+  end
+
   def contributing_authors
     author_list = []
-    appearance = article_titles.map{|tit| tit.author.name}
-    appearance.tally.each{|key, value| value > 2 && author_list << key}
-    return author_list
+    articles_in_magazine.map{ |article| article.author.name }.tally.each{|key, value| value > 2 && author_list << key}
+    author_list
   end
-  
-end
 
+end

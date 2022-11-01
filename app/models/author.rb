@@ -1,6 +1,6 @@
-class Author 
+class Author
   attr_reader :name
-  include MagazinesMod
+
   include ArticleMod
 
   def initialize(name)
@@ -8,11 +8,11 @@ class Author
   end
 
   def articles
-    @@all_articles.filter{|art| art.author.name == self.name}
+    @@all_articles.filter{ |article| article.author.name == @name }
   end
 
   def magazines
-    articles.map{|mag|mag.magazine}.uniq
+    articles.map{|mag| mag.magazine}.uniq
   end
 
   def add_article(magazine, title)
@@ -20,7 +20,7 @@ class Author
   end
 
   def topic_areas
-    magazines.map{|article| article.category}
+    magazines.map{|mag| mag.category}.uniq
   end
 
 end
